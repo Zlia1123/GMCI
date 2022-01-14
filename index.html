@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+<!-- 引入样式 -->
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<!-- 引入组件库 -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<body>
+    <div id="app">
+        <h1>WillKommen</h1>
+        <h3>Bei Neu Orientalish</h3>
+        <div class="app_container" v-if='show1'>
+            <h3>Reservieren Sie bitte!</h3>
+            <!-- 日期选择 -->
+            <div class="item">
+                <div class="item_name">Datum:</div>
+                <el-date-picker
+                    v-model="datum"
+                    type="date"
+                    placeholder="choose date"
+                    format="yyyy / MM / dd "
+                    value-format="yyyy-MM-dd">
+                </el-date-picker>
+            </div>
+            <!-- 时间选择 -->
+            <div class="item">
+                <div class="item_name">Urzeit:</div>
+                <el-time-select
+                    v-model="Urzeit"
+                    :picker-options="{
+                        start: '08:30',
+                        step: '00:15',
+                        end: '18:30'
+                    }"
+                    placeholder="choose time">
+                </el-time-select>
+            </div>
+            <!-- 人数选择 -->
+            <div class="item">
+                <div class="item_name">PersonenAnzahl:</div>
+                <el-select v-model="PersonenAnzahl" placeholder="choose num">
+                    <el-option 
+                    v-for="item,i in 10"
+                    :key="i"
+                    :label="item"
+                    :value="item"></el-option>
+                </el-select>
+            </div>
+            <!-- 电话输入 -->
+            <div class="item">
+                <div class="item_name">Tel:</div>
+                <el-input v-model="Tel"></el-input>
+            </div>
+            <!-- 邮箱输入 -->
+            <div class="item">
+                <div class="item_name">E-mail:</div>
+                <el-input v-model="mail"></el-input>
+            </div>
+            <!-- 桌子选择 -->
+            <div class="item">
+                <div class="item_name">Tisch:</div>
+                <div class="choose" @click='chooseTisch'>{{choose}}</div>
+            </div>
+            <div style="padding-left: 240px;">
+                <el-button  round type="primary" @click="goMenu">Bestaetigen</el-button>
+            </div>
+            <el-dialog title="choose your tisch" :visible.sync="dialogTableVisible" :show-close="false" :close-on-click-modal='false'>
+                <el-radio-group v-model="tisch" >
+                    <el-radio label="A1" border>A1</el-radio>
+                    <el-radio label="A2" border >A2</el-radio>
+                    <el-radio label="B1" border>B1</el-radio>
+                    <el-radio label="B2" border >B2</el-radio>
+                    <el-radio label="C1" border>C1</el-radio>
+                    <el-radio label="C2" border >C2</el-radio>
+                  </el-radio-group>
+                  <div style="padding-left: 360px;margin-top: 20px;"><el-button  round type="primary" @click="confirmTisch">confirm</el-button></div>
+              </el-dialog>
+        </div>
+        <div class="app_menu" v-if="show2">
+            <h3>Menu</h3>
+            <!--菜单分类一 -->
+            <div class="menu_item">
+                <!-- 分类名 -->
+                <div class="menu_item_title">Fisch und Garnelen</div>
+                <!-- 具体的菜 -->
+                <div class="menu_item_content" >
+                    <!-- 菜名 -->
+                    <div class="menu_item_content_title">Gebckene Fischfilet mit suss-sauer sosse</div>
+                    <div class="price" >12,5</div>
+                    <el-input-number v-model="cai_num" size="mini"></el-input-number>
+                </div>
+                <div class="menu_item_content" >
+                    <div class="menu_item_content_title">Gebckene Fischfilet mit suss-sauer sosse</div>
+                    <div class="price" >12,5</div>
+                    <el-input-number v-model="cai_num" size="mini"></el-input-number>
+                </div>
+                <div class="menu_item_content" >
+                    <div class="menu_item_content_title">Gebckene Fischfilet mit suss-sauer sosse</div>
+                    <div class="price" >12,5</div>
+                    <el-input-number v-model="cai_num" size="mini"></el-input-number>
+                </div>
+                <div class="menu_item_content" >
+                    <div class="menu_item_content_title">Gebckene Fischfilet mit suss-sauer sosse</div>
+                    <div class="price" >12,5</div>
+                    <el-input-number v-model="cai_num" size="mini"></el-input-number>
+                </div>
+                <div class="menu_item_content" >
+                    <div class="menu_item_content_title">Gebckene Fischfilet mit suss-sauer sosse</div>
+                    <div class="price" >12,5</div>
+                    <el-input-number v-model="cai_num" size="mini"></el-input-number>
+                </div>
+                <div class="menu_item_content" >
+                    <div class="menu_item_content_title">Gebckene Fischfilet mit suss-sauer sosse</div>
+                    <div class="price" >12,5</div>
+                    <el-input-number v-model="cai_num" size="mini"></el-input-number>
+                </div>
+
+
+            </div>
+            <!-- 菜单分类二 -->
+            <div class="menu_item">
+                <!-- 分类名 -->
+                <div class="menu_item_title">Fisch und Garnelen</div>
+                <!-- 具体的菜 -->
+                <div class="menu_item_content" >
+                    <!-- 菜名 -->
+                    <div class="menu_item_content_title">Gebckene Fischfilet mit suss-sauer sosse</div>
+                    <div class="price" >12,5</div>
+                    <el-input-number v-model="cai_num" size="mini"></el-input-number>
+                </div>
+                <div class="menu_item_content" >
+                    <div class="menu_item_content_title">Gebckene Fischfilet mit suss-sauer sosse</div>
+                    <div class="price" >12,5</div>
+                    <el-input-number v-model="cai_num" size="mini"></el-input-number>
+                </div>
+                <div class="menu_item_content" >
+                    <div class="menu_item_content_title">Gebckene Fischfilet mit suss-sauer sosse</div>
+                    <div class="price" >12,5</div>
+                    <el-input-number v-model="cai_num" size="mini"></el-input-number>
+            </div>
+            <div class="menu_item"></div>
+
+            </div>
+            <!-- 菜单分类三 -->
+            <div class="menu_item">
+                <!-- 分类名 -->
+                <div class="menu_item_title">Fisch und Garnelen</div>
+                <!-- 具体的菜 -->
+                <div class="menu_item_content" >
+                    <!-- 菜名 -->
+                    <div class="menu_item_content_title">Gebckene Fischfilet mit suss-sauer sosse</div>
+                    <div class="price" >12,5</div>
+                    <el-input-number v-model="cai_num" size="mini"></el-input-number>
+                </div>
+                <div class="menu_item_content" >
+                    <div class="menu_item_content_title">Gebckene Fischfilet mit suss-sauer sosse</div>
+                    <div class="price" >12,5</div>
+                    <el-input-number v-model="cai_num" size="mini"></el-input-number>
+                </div>
+            </div>
+            <div style="padding-left: 370px;margin-top: 20px;">
+                <el-button  round type="primary" @click="goEnd">Bestaetigen</el-button>
+            </div>
+        </div>
+        <div class="app_end" v-if="show3" >
+            <h3>Ihre Reservierung war erfolgreic!!!!</h3>
+            <img src="https://img2.baidu.com/it/u=1764842007,923288964&fm=26&fmt=auto"  style="width: 200px;height: 200px;" alt="">
+            <div class="info">
+                <div>{{Urzeit}}</div>
+                <div>{{datum}}</div>
+                <div>{{PersonenAnzahl}} Personen</div>
+                <div>address: asdasdsadasd</div>
+                
+            </div>
+        </div>
+    </div>
+</body>
+<style>
+    body{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    #app{
+        width: 500px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .item{
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .item_name{
+        margin-right: 10px;
+        min-width: 130px;
+    }
+    .choose{
+        border: 1px dashed ;
+        width: 220px;
+        min-height: 40p;
+        line-height: 40px;
+        text-align: center;
+    }
+    .choose:hover{
+        cursor: pointer;
+    }
+    .el-radio-group{
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .menu_item_content{
+        width: 500px;
+        display: flex;
+        align-items: center;
+        font-size: 12px;
+        justify-content: space-between;
+    }
+</style>
+<script>
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            show1:true,
+            show2:false,
+            show3:false,
+            choose:'choose your table',
+            datum:null,
+            Urzeit:null,
+            PersonenAnzahl:null,
+            Tel:null,
+            mail:null,
+            dialogTableVisible:false,
+            tisch:'',
+            cai_num:0
+        },
+        methods:{
+            chooseTisch(){
+                this.dialogTableVisible = true
+            },
+            handleChange(){
+
+            },
+            confirmTisch(){
+                this.dialogTableVisible = false
+                this.choose = this.tisch
+            },
+            goMenu(){
+                this.show1 = false
+                this.show2 = true
+            },
+            goEnd(){
+                this.show2 = false
+                this.show3= true
+            }
+        }
+    })
+</script>
+</html>
