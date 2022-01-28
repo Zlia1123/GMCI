@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+<!-- 引入样式 -->
+<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+<!-- 引入组件库 -->
+<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+<body>
+    <div id="app">
+        <!-- 轮播图 -->
+        <el-carousel height="250px">
+            <el-carousel-item >
+              <img src="./1.jpg" alt="" style="width: 800px;height: 250px;">
+            </el-carousel-item>
+            <el-carousel-item >
+                <img src="./2.jpg" alt="" style="width: 800px;height: 250px;">
+              </el-carousel-item>
+              <el-carousel-item >
+                <img src="./3.jpg" alt="" style="width: 800px;height: 250px;">
+              </el-carousel-item>
+          </el-carousel>
+          <el-card class="box-card-1" style="width: 800px;height: 100px">
+            <div style="display: flex;justify-content: space-between;align-items: center;">
+                <div style="display: flex;align-items: center;">
+                    <h3>WILLKOMMEN / </h3>
+                <h5> Bei Neu Orientalisch / Marie-Curie-Str. 3, 30823 Garbsen / 01626356607</h5>
+                </div>
+                <el-avatar :size="50" src="./4.jpg"></el-avatar>
+            </div>
+          </el-card>
+          <el-steps :active="active" finish-status="success" style="margin-top:20px;margin-bottom: 10px;">
+            <el-step title="Zeit"></el-step>
+            <el-step title="Gericht"></el-step>
+            <el-step title="Erfolgreich"></el-step>
+          </el-steps>
+          <el-card class="box-card">
+            <div slot="header" class="clearfix">
+              <span>Reservieren Sie bitte</span>
+              
+            </div>
+            <!-- 选择时间 -->
+            <el-form v-show="show1" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm" :inline="true">
+                <el-form-item label="DATUM" prop="date" required>
+                    <el-date-picker
+                    v-model="ruleForm.date"
+                    type="date"
+                    value-format='yyyy-MM-dd'
+                    >
+                  </el-date-picker>
+                </el-form-item>
+                </el-form-item>
+                <el-form-item label="UREZEIT" prop="time" required>
+                    <el-time-select
+                    v-model="ruleForm.time"
+                    :picker-options="{
+                      start: '11:30',
+                      step: '00:30',
+                      end: '20:30'
+                    }"
+                    >
+                  </el-time-select>
+                </el-form-item>
+                <el-form-item label="ZAHL" required>
+                    <el-select v-model="ruleForm.num" place-holder='check'>
+                        <el-option
+                          v-for="item in 12"
+                          :key="item"
+                          :label="item"
+                          :value="item">
+                        </el-option>
+                      </el-select>
+                </el-form-item>
+                <el-form-item label="TEL" prop="tel" required>
+                  <el-input v-model="ruleForm.tel" style="width: 220px;"></el-input>
+                </el-form-item>
+                <el-form-item label="E-MAIL" prop="mail" required>
+                    <el-input v-model="ruleForm.mail" style="width: 220px;"></el-input>
+                </el-form-item>
+                <el-form-item label="TISCH" required>
+                     <div @click="openTisch" class="openTisch" style="width: 220px;box-sizing: border-box;border: 1px dashed;text-align: center;">{{ruleForm.tisch}}</div>
+                </el-form-item>
+                <el-form-item style="margin-left: 500px;">
+                    <el-button @click="resetForm('ruleForm')">Rückstellung </el-button>
+                    <el-button type="primary" @click="submitForm('ruleForm')">Bestätigen </el-button>
+                    
+                  </el-form-item>
+                 <el-dialog title="TISCH"
+                 :visible.sync="dialogVisible"
+                 width="540px"
+                 >
+                    <div class="tisch_container" style="width: 500px;height: 300px;">
+                        <div class="top" style="height:200px;display: flex;">
+                            <div class="left" >
+                                <div class="left_top" style="display: flex;margin-bottom: 50px;">
+                                    <div class="bb icon_active"  style="width: 100px;height: 60px;margin-right: 50px;">B1</div>
+                                    <div class="bb"  @click='check1' style="width: 100px;height: 60px;background-color: red;margin-right: 100px;" :class="{icon_active:categoryIndex==1}">B2</div>
+                                    <div class="cc icon_active" style="width: 150px;height: 60px;background-color: red;">C1</div>
+                                </div>
+                                <div class="left_bottom" style="display: flex;">
+                                    <div class="bb"  @click='check2' style="width: 100px;height: 60px;background-color: red;margin-right: 50px;" :class="{icon_active:categoryIndex==2}">B3</div>
+                                    <div class="bb "  @click='check3' style="width: 100px;height: 60px;background-color: red;margin-right: 100px;" :class="{icon_active:categoryIndex==3}">B4</div>
+                                    <div class="cc" :class="{icon_active:categoryIndex==4}" @click='check4' style="width: 150px;height: 60px;background-color: red;">C2</div>
+                                </div>
+                            </div>
+                        
+                        
+                        </div>
+                        <div class="bottom" style="height:100px;display: flex;justify-content: space-between;align-items: center;">
+                            <div class="aa icon_active" style="width: 80px;height: 60px;">A1</div>
+                            <div class="aa icon_active" style="width: 80px;height: 60px;">A2</div>
+                            <div class="aa" :class="{icon_active:categoryIndex==5}" @click='check5' style="width: 80px;height: 60px;">A3</div>
+                            <div class="aa" :class="{icon_active:categoryIndex==6}" @click='check6' style="width: 80px;height: 60px;">A4</div>
+                        </div>
+                    </div>
+                    <span slot="footer" class="dialog-footer">
+                        <el-button>Die Tabelle, die Sie gerade auswählen, ist: {{checkedTisch}}</el-button>
+                        <el-button type="primary" @click="dialogVisible = false;ruleForm.tisch = checkedTisch">Bestätigen </el-button>
+                    </span>
+                </el-dialog>
+            </el-form>
+            <!-- 选择菜品 -->
+            <div v-show="show2">
+                <h3>Fisch und Garnelen:</h3>
+                <div class="gericht">
+                    <div class="gericht_item" style="display: flex;justify-content: space-between;">
+                        <div class="a" style="align-items: center;line-height: 32px;">Gebackene Fischfilet mit süß-sauer soße</div>
+                        <div class="b" style="align-items: center;line-height: 32px;">12.9€</div>
+                        <el-input-number   :min="0" :max="10" size='small' v-model="gericht.num1"></el-input-number>
+                    </div>
+                    <div class="gericht_item" style="display: flex;justify-content: space-between;">
+                        <div class="a" style="align-items: center;line-height: 32px;">Gebackene Fischfilet mit Pflaumensoße</div>
+                        <div class="b" style="align-items: center;line-height: 32px;">12.9€</div>
+                        <el-input-number   :min="0" :max="10" size='small' v-model="gericht.num2"></el-input-number>
+                    </div>
+                    <div class="gericht_item" style="display: flex;justify-content: space-between;">
+                        <div class="a" style="align-items: center;line-height: 32px;">Gebackene Garnelen mit Morcheln und Bam</div>
+                        <div class="b" style="align-items: center;line-height: 32px;">12.9€</div>
+                        <el-input-number   :min="0" :max="10" size='small' v-model="gericht.num3"></el-input-number>
+                    </div>
+                    <div class="gericht_item" style="display: flex;justify-content: space-between;">
+                        <div class="a" style="align-items: center;line-height: 32px;">Gebackene Garnelen mit Morcheln und Bambus</div>
+                        <div class="b" style="align-items: center;line-height: 32px;">12.9€</div>
+                        <el-input-number   :min="0" :max="10" size='small' v-model="gericht.num4"></el-input-number>
+                    </div>
+                    <div class="gericht_item" style="display: flex;justify-content: space-between;">
+                        <div class="a" style="align-items: center;line-height: 32px;">Gebackene Garnelen mit versch.Gemüse</div>
+                        <div class="b" style="align-items: center;line-height: 32px;">12.9€</div>
+                        <el-input-number   :min="0" :max="10" size='small'v-model="gericht.num5"></el-input-number>
+                    </div>
+                    <div class="gericht_item" style="display: flex;justify-content: space-between;">
+                        <div class="a" style="align-items: center;line-height: 32px;">Gebackene Garnelen mit  süß-sauer soße</div>
+                        <div class="b" style="align-items: center;line-height: 32px;">12.9€</div>
+                        <el-input-number   :min="0" :max="10" size='small' v-model="gericht.num6"></el-input-number>
+                    </div>
+                </div>
+                <h3>Vegetarisch:</h3>
+                <div class="gericht">
+                    <div class="gericht_item" style="display: flex;justify-content: space-between;">
+                        <div class="a" style="align-items: center;line-height: 32px;">Gebratenes Tofu mit Bambus und Morcheln</div>
+                        <div class="b" style="align-items: center;line-height: 32px;">12.9€</div>
+                        <el-input-number   :min="0" :max="10" size='small' v-model="gericht.num7"></el-input-number>
+                    </div>
+                    <div class="gericht_item" style="display: flex;justify-content: space-between;">
+                        <div class="a" style="align-items: center;line-height: 32px;">Fastenspeise der Buddhisten</div>
+                        <div class="b" style="align-items: center;line-height: 32px;">12.9€</div>
+                        <el-input-number   :min="0" :max="10" size='small' v-model="gericht.num8"></el-input-number>
+                    </div>
+
+                </div>
+                <h3>Nudeln und Reis:</h3>
+                <div class="gericht">
+                    <div class="gericht_item" style="display: flex;justify-content: space-between;">
+                        <div class="a" style="align-items: center;line-height: 32px;">Vegetarische Bratnudeln mit Ei und Gemüse</div>
+                        <div class="b" style="align-items: center;line-height: 32px;">12.9€</div>
+                        <el-input-number   :min="0" :max="10" size='small' v-model="gericht.num9"></el-input-number>
+                    </div>
+                    <div class="gericht_item" style="display: flex;justify-content: space-between;">
+                        <div class="a" style="align-items: center;line-height: 32px;">Bratreis mit Rindfleisch und Gemüse</div>
+                        <div class="b" style="align-items: center;line-height: 32px;">12.9€</div>
+                        <el-input-number   :min="0" :max="10" size='small' v-model="gericht.num10"></el-input-number>
+                    </div>
+                </div>
+                <div style="margin-left:498px;margin-top: 20px;">
+                    <el-button @click="show1 = true;show2=false;active = 1">Zurück</el-button>
+                    <el-button type="primary" @click="show3=true;show2=false;active = 3">Bestätigen </el-button>
+                </div>
+            </div>
+            <!-- 订购成功 -->
+            <el-result icon="success" title="Reservierung Erfolgreich" v-show="show3">
+                <template slot="extra">
+                    <el-descriptions class="margin-top" title="Ihre Reservierungsinformationen" :column="3" >
+                        <el-descriptions-item label="DATUM ">{{ruleForm.date}}</el-descriptions-item>
+                        <el-descriptions-item label="ZEIT ">{{ruleForm.time}}</el-descriptions-item>
+                        <el-descriptions-item label="ZAHL ">{{ruleForm.num}}</el-descriptions-item>
+                        <el-descriptions-item label="TISCH ">
+                          <el-tag size="small">{{checkedTisch}}</el-tag>
+                        </el-descriptions-item>
+                        <el-descriptions-item label="ADRESSE ">Marie-Curie-Str. 3, 30823 Garbsen </el-descriptions-item>
+                      </el-descriptions>
+                  <el-button type="primary"  @click='show3=false;show2=true;active = 2'>Zurück</el-button>
+                </template>
+            </el-result>          
+          </el-card>
+    </div>
+
+</body>
+<style>
+    body{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+    }
+    #app{
+        width: 800px;
+    }
+    .openTisch:hover{
+        cursor: pointer;
+    }
+    .a{
+        width: 500px;
+    }
+    .bb{
+        background-image: url(./b.jpg) ;
+        background-size: 100px 60px;
+        text-align: center;
+        line-height: 60px;
+        box-sizing: border-box;
+    }
+    .bb:hover{
+
+        cursor: pointer;
+    }
+
+    .cc{
+        background-image: url(./c.jpg);
+        background-size: 150px 60px;
+        text-align: center;
+        line-height: 60px;
+        box-sizing: border-box;
+    }
+    .right{
+        background-image: url(./ff.jpg);
+        background-size: 20px 200px;
+    }
+    .aa{
+        background-image: url(./a.jpg);
+        background-size: 80px 60px;
+        text-align: center;
+        line-height: 60px;
+        box-sizing: border-box;
+    }
+    .cc:hover{
+
+        cursor: pointer;
+    }
+    .aa:hover{
+
+        cursor: pointer;
+    }
+    .icon_active{
+        border: 1px solid red;
+    }
+</style>
+<script>
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            active:1,
+            ruleForm:{
+                date:'',
+                time:'',
+                num:1,
+                tel:'',
+                mail:'',
+                tisch:'Auswählen einer Tabelle'
+            },
+            rules:{
+                rule: [
+                    {type: 'date', required: true, message: 'Unbedingt ! ! !',trigger:'change'},
+                ],
+            },
+            dialogVisible:false,
+            show1:true,
+            show2:false,
+            show3:false,
+            gericht:{
+                num1:0,
+                num2:0,
+                num3:0,
+                num4:0,
+                num5:0,
+                num6:0,
+                num7:0,
+                num8:0,
+                num9:0,
+                num10:0,
+                
+            },
+            categoryIndex:0,
+            checkedTisch:''
+        },
+        methods:{
+            submitForm(formName) {
+            this.$refs[formName].validate((valid) => {
+            if (valid) {
+                console.log(this.ruleForm)
+                this.show1 = false
+                this.show2 = true
+                this.active = 2
+            } else {
+                console.log('error submit!!');
+                return false;
+            }
+            });
+        },
+        resetForm(formName) {
+            this.$refs[formName].resetFields();
+        },
+        openTisch(){
+            this.dialogVisible = true
+        },
+        check1(){
+            this.categoryIndex = 1
+            this.checkedTisch = 'B2'
+        },
+        check2(){
+            this.categoryIndex = 2
+            this.checkedTisch = 'B3'
+        },
+        check3(){
+            this.categoryIndex = 3
+            this.checkedTisch = 'B4'
+        },
+        check4(){
+            this.categoryIndex = 4
+            this.checkedTisch = 'C2'
+        },
+        check5(){
+            this.categoryIndex = 5
+            this.checkedTisch = 'A3'
+        },
+        check6(){
+            this.categoryIndex = 6
+            this.checkedTisch = 'A4'
+        },
+        }
+    })
+</script>
+</html>
